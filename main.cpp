@@ -8,8 +8,8 @@ int main(int argc, char** argv) {
     int rows, columns;
     cin >> rows;
     cin >> columns;
-    ArrayCreator *arrayCreator = new ArrayCreator(rows, columns);
+    Calculator *arrayCreator = new Calculator(rows, columns);
     arrayCreator->DetermineStartingLocations();
-    arrayCreator->ClassicModeCalculator();
+    arrayCreator->MirrorModeCalculator();
     return 0;
 }

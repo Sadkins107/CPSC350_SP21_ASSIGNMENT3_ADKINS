@@ -6,34 +6,33 @@
 
 using namespace std;
 
-class ArrayCreator {
+class Calculator {
   public:
-    ArrayCreator();
-    ArrayCreator(int rows, int columns);
-    ~ArrayCreator();
+    Calculator();
+    Calculator(int rows, int columns);
+    ~Calculator();
     void DetermineStartingLocations();
-    void ClassicModeCalculator();
-    void EdgeCalculator();
-    int TopLeft();
-    int TopRight();
-    int BottomLeft();
-    int BottomRight();
-    int TopRow(int j);
-    int BottomRow(int j);
-    int LeftSide(int i);
-    int RightSide(int i);
-
+    void MirrorModeCalculator();
+    char** myArray;
+    int** CurrentGen;
+    int** SecondGen;
+    int** FirstGen;
 
   private:
     int rows;
     int columns;
     int numLocations = 0;
     double randomNum;
-    char** myArray;
-    int** CurrentGen;
     void CentralChunk();
-    int** SecondGen;
-    int** FirstGen;
+    void M_EdgeCalculator();
+    int M_TopLeft();
+    int M_TopRight();
+    int M_BottomLeft();
+    int M_BottomRight();
+    int M_TopRow(int j);
+    int M_BottomRow(int j);
+    int M_LeftSide(int i);
+    int M_RightSide(int i);
 
 };
 

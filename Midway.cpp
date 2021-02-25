@@ -1,7 +1,7 @@
 #include "Midway.h"
 //#include "Simulation.h"
 
-ArrayCreator::ArrayCreator() {
+Calculator::Calculator() {
   rows = 1;
   columns = 1;
 
@@ -39,7 +39,7 @@ ArrayCreator::ArrayCreator() {
   }
 }
 
-ArrayCreator::ArrayCreator(int rows, int columns) {
+Calculator::Calculator(int rows, int columns) {
   this->rows = rows;
   this->columns = columns;
 
@@ -60,14 +60,18 @@ ArrayCreator::ArrayCreator(int rows, int columns) {
 
 }
 
-ArrayCreator::~ArrayCreator() {
-  for (int i = 0; i < rows; i++)
+Calculator::~Calculator() {
+  for (int i = 0; i < rows; i++) {
       delete[] myArray[i];
+      delete[] FirstGen[i];
+      delete[] SecondGen[i];
+      delete[] CurrentGen[i];
+  }
 
   delete[] myArray;
 }
 
-void ArrayCreator::DetermineStartingLocations() {
+void Calculator::DetermineStartingLocations() {
   for (int i = 0; i < rows; ++i) {
     for (int j = 0; j < columns; ++j) {
       randomNum = ((double) rand() / (RAND_MAX));
@@ -90,13 +94,13 @@ void ArrayCreator::DetermineStartingLocations() {
 
 }
 
-void ArrayCreator::ClassicModeCalculator() {
+void Calculator::MirrorModeCalculator() {
   CentralChunk();
-  EdgeCalculator();
+  M_EdgeCalculator();
 }
 
 
-void ArrayCreator::CentralChunk() {
+void Calculator::CentralChunk() {
   for (int i = 1; i < rows - 1; ++i) {
     for (int j = 1; j < columns - 1; ++j) {
       numLocations = 0;
@@ -129,19 +133,19 @@ void ArrayCreator::CentralChunk() {
   }
 }
 
-void ArrayCreator::EdgeCalculator() {
-  CurrentGen[0][0] = TopLeft();
-  CurrentGen[0][columns-1] = TopRight();
-  CurrentGen[rows-1][0] = BottomLeft();
-  CurrentGen[rows-1][columns-1] = BottomRight();
+void Calculator::M_EdgeCalculator() {
+  CurrentGen[0][0] = M_TopLeft();
+  CurrentGen[0][columns-1] = M_TopRight();
+  CurrentGen[rows-1][0] = M_BottomLeft();
+  CurrentGen[rows-1][columns-1] = M_BottomRight();
   for (int j = 1; j < columns - 1; ++j) {
-    CurrentGen[0][j] = TopRow(j);
-    CurrentGen[rows-1][j] = BottomRow(j);
+    CurrentGen[0][j] = M_TopRow(j);
+    CurrentGen[rows-1][j] = M_BottomRow(j);
   }
 
   for (int i = 1; i < rows - 1; ++i) {
-    CurrentGen[i][0] = LeftSide(i);
-    CurrentGen[i][columns-1] = RightSide(i);
+    CurrentGen[i][0] = M_LeftSide(i);
+    CurrentGen[i][columns-1] = M_RightSide(i);
   }
 
   for (int i = 0; i < rows; ++i) {
@@ -152,12 +156,15 @@ void ArrayCreator::EdgeCalculator() {
   }
 }
 
-int ArrayCreator::TopLeft() {
+int Calculator::M_TopLeft() {
   int topLeftNeighbors = 0;
 
+  if (myArray[0][0] == 'X') {
+    topLeftNeighbors += 3;
+  }
   if (myArray[0][1] == 'X')
   {
-    topLeftNeighbors++;
+    topLeftNeighbors += 2;
   }
   if (myArray[1][1] == 'X')
   {
@@ -165,17 +172,20 @@ int ArrayCreator::TopLeft() {
   }
   if (myArray[1][0] == 'X')
   {
-    topLeftNeighbors++;
+    topLeftNeighbors += 2;
   }
   return topLeftNeighbors;
 }
 
-int ArrayCreator::TopRight() {
+int Calculator::M_TopRight() {
   int topRightNeighbors = 0;
 
+  if (myArray[0][columns-1] == 'X') {
+    topRightNeighbors += 3;
+  }
   if (myArray[0][columns-2] == 'X')
   {
-    topRightNeighbors++;
+    topRightNeighbors += 2;
   }
   if (myArray[1][columns-2] == 'X')
   {
@@ -183,18 +193,21 @@ int ArrayCreator::TopRight() {
   }
   if (myArray[1][columns-1] == 'X')
   {
-    topRightNeighbors++;
+    topRightNeighbors += 2;
   }
   return topRightNeighbors;
 }
 
 
-int ArrayCreator::BottomLeft() {
+int Calculator::M_BottomLeft() {
   int bottomLeftNeighbors = 0;
 
+  if (myArray[rows-1][0] == 'X') {
+    bottomLeftNeighbors += 3;
+  }
   if (myArray[rows-2][0] == 'X')
   {
-    bottomLeftNeighbors++;
+    bottomLeftNeighbors += 2;
   }
   if (myArray[rows-2][1] == 'X')
   {
@@ -202,17 +215,20 @@ int ArrayCreator::BottomLeft() {
   }
   if (myArray[rows-1][1] == 'X')
   {
-    bottomLeftNeighbors++;
+    bottomLeftNeighbors += 2;
   }
   return bottomLeftNeighbors;
 }
 
-int ArrayCreator::BottomRight() {
+int Calculator::M_BottomRight() {
   int bottomRightNeighbors = 0;
 
+  if (myArray[rows-1][columns-1] == 'X') {
+    bottomRightNeighbors += 3;
+  }
   if (myArray[rows-1][columns-2] == 'X')
   {
-    bottomRightNeighbors++;
+    bottomRightNeighbors += 2;
   }
   if (myArray[rows-2][columns-2] == 'X')
   {
@@ -220,15 +236,19 @@ int ArrayCreator::BottomRight() {
   }
   if (myArray[rows-2][columns-1] == 'X')
   {
-    bottomRightNeighbors++;
+    bottomRightNeighbors += 2;
   }
   return bottomRightNeighbors;
 }
 
-int ArrayCreator::TopRow(int j) {
+int Calculator::M_TopRow(int j) {
   int neighborCount = 0;
-  if (myArray[0][j-1] == 'X') {
+
+  if (myArray[0][j] == 'X') {
     neighborCount++;
+  }
+  if (myArray[0][j-1] == 'X') {
+    neighborCount += 2;
   }
   if (myArray[1][j-1] == 'X') {
     neighborCount++;
@@ -240,15 +260,19 @@ int ArrayCreator::TopRow(int j) {
     neighborCount++;
   }
   if (myArray[0][j+1] == 'X') {
-    neighborCount++;
+    neighborCount += 2;
   }
   return neighborCount;
 }
 
-int ArrayCreator::BottomRow(int j) {
+int Calculator::M_BottomRow(int j) {
   int neighborCount = 0;
-  if (myArray[rows-1][j-1] == 'X') {
+
+  if (myArray[rows-1][j] == 'X') {
     neighborCount++;
+  }
+  if (myArray[rows-1][j-1] == 'X') {
+    neighborCount += 2;
   }
   if (myArray[rows-2][j-1] == 'X') {
     neighborCount++;
@@ -260,15 +284,19 @@ int ArrayCreator::BottomRow(int j) {
     neighborCount++;
   }
   if (myArray[rows-1][j+1] == 'X') {
-    neighborCount++;
+    neighborCount += 2;
   }
   return neighborCount;
 }
 
-int ArrayCreator::LeftSide(int i) {
+int Calculator::M_LeftSide(int i) {
   int neighborCount = 0;
-  if (myArray[i-1][0] == 'X') {
+
+  if (myArray[i][0] == 'X') {
     neighborCount++;
+  }
+  if (myArray[i-1][0] == 'X') {
+    neighborCount += 2;
   }
   if (myArray[i-1][1] == 'X') {
     neighborCount++;
@@ -280,15 +308,19 @@ int ArrayCreator::LeftSide(int i) {
     neighborCount++;
   }
   if (myArray[i+1][0] == 'X') {
-    neighborCount++;
+    neighborCount += 2;
   }
   return neighborCount;
 }
 
-int ArrayCreator::RightSide(int i) {
+int Calculator::M_RightSide(int i) {
   int neighborCount = 0;
-  if (myArray[i-1][columns-1] == 'X') {
+
+  if (myArray[i][columns-1] == 'X') {
     neighborCount++;
+  }
+  if (myArray[i-1][columns-1] == 'X') {
+    neighborCount += 2;
   }
   if (myArray[i-1][columns-2] == 'X') {
     neighborCount++;
@@ -300,7 +332,7 @@ int ArrayCreator::RightSide(int i) {
     neighborCount++;
   }
   if (myArray[i+1][columns-1] == 'X') {
-    neighborCount++;
+    neighborCount += 2;
   }
   return neighborCount;
 }
