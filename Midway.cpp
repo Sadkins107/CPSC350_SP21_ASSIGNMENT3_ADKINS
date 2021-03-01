@@ -69,6 +69,9 @@ Calculator::~Calculator() {
   }
 
   delete[] myArray;
+  delete[] FirstGen;
+  delete[] SecondGen;
+  delete[] CurrentGen;
 }
 
 void Calculator::DetermineStartingLocations() {
@@ -94,9 +97,9 @@ void Calculator::DetermineStartingLocations() {
 
 }
 
-void Calculator::MirrorModeCalculator() {
+void Calculator::DoughnutModeCalculator() {
   CentralChunk();
-  M_EdgeCalculator();
+  D_EdgeCalculator();
 }
 
 
@@ -133,19 +136,19 @@ void Calculator::CentralChunk() {
   }
 }
 
-void Calculator::M_EdgeCalculator() {
-  CurrentGen[0][0] = M_TopLeft();
-  CurrentGen[0][columns-1] = M_TopRight();
-  CurrentGen[rows-1][0] = M_BottomLeft();
-  CurrentGen[rows-1][columns-1] = M_BottomRight();
+void Calculator::D_EdgeCalculator() {
+  CurrentGen[0][0] = D_TopLeft();
+  CurrentGen[0][columns-1] = D_TopRight();
+  CurrentGen[rows-1][0] = D_BottomLeft();
+  CurrentGen[rows-1][columns-1] = D_BottomRight();
   for (int j = 1; j < columns - 1; ++j) {
-    CurrentGen[0][j] = M_TopRow(j);
-    CurrentGen[rows-1][j] = M_BottomRow(j);
+    CurrentGen[0][j] = D_TopRow(j);
+    CurrentGen[rows-1][j] = D_BottomRow(j);
   }
 
   for (int i = 1; i < rows - 1; ++i) {
-    CurrentGen[i][0] = M_LeftSide(i);
-    CurrentGen[i][columns-1] = M_RightSide(i);
+    CurrentGen[i][0] = D_LeftSide(i);
+    CurrentGen[i][columns-1] = D_RightSide(i);
   }
 
   for (int i = 0; i < rows; ++i) {
@@ -156,15 +159,27 @@ void Calculator::M_EdgeCalculator() {
   }
 }
 
-int Calculator::M_TopLeft() {
+int Calculator::D_TopLeft() {
   int topLeftNeighbors = 0;
 
-  if (myArray[0][0] == 'X') {
-    topLeftNeighbors += 3;
+  if (myArray[0][columns-1] == 'X') {
+    topLeftNeighbors++;
+  }
+  if (myArray[1][columns-1] == 'X') {
+    topLeftNeighbors++;
+  }
+  if (myArray[rows-1][0] == 'X') {
+    topLeftNeighbors++;
+  }
+  if (myArray[rows-1][2] == 'X') {
+    topLeftNeighbors++;
+  }
+  if (myArray[rows-1][columns-1] == 'X') {
+    topLeftNeighbors++;
   }
   if (myArray[0][1] == 'X')
   {
-    topLeftNeighbors += 2;
+    topLeftNeighbors++;
   }
   if (myArray[1][1] == 'X')
   {
@@ -172,20 +187,32 @@ int Calculator::M_TopLeft() {
   }
   if (myArray[1][0] == 'X')
   {
-    topLeftNeighbors += 2;
+    topLeftNeighbors++;
   }
   return topLeftNeighbors;
 }
 
-int Calculator::M_TopRight() {
+int Calculator::D_TopRight() {
   int topRightNeighbors = 0;
 
-  if (myArray[0][columns-1] == 'X') {
-    topRightNeighbors += 3;
+  if (myArray[rows-1][columns-2] == 'X') {
+    topRightNeighbors++;
+  }
+  if (myArray[rows-1][columns-1] == 'X') {
+    topRightNeighbors++;
+  }
+  if (myArray[rows-1][0] == 'X') {
+    topRightNeighbors++;
+  }
+  if (myArray[1][0] == 'X') {
+    topRightNeighbors++;
+  }
+  if (myArray[0][0] == 'X') {
+    topRightNeighbors++;
   }
   if (myArray[0][columns-2] == 'X')
   {
-    topRightNeighbors += 2;
+    topRightNeighbors++;
   }
   if (myArray[1][columns-2] == 'X')
   {
@@ -193,21 +220,33 @@ int Calculator::M_TopRight() {
   }
   if (myArray[1][columns-1] == 'X')
   {
-    topRightNeighbors += 2;
+    topRightNeighbors++;
   }
   return topRightNeighbors;
 }
 
 
-int Calculator::M_BottomLeft() {
+int Calculator::D_BottomLeft() {
   int bottomLeftNeighbors = 0;
 
-  if (myArray[rows-1][0] == 'X') {
-    bottomLeftNeighbors += 3;
+  if (myArray[rows-1][columns-1] == 'X') {
+    bottomLeftNeighbors++;
+  }
+  if (myArray[rows-2][columns-1] == 'X') {
+    bottomLeftNeighbors++;
+  }
+  if (myArray[0][columns-1] == 'X') {
+    bottomLeftNeighbors++;
+  }
+  if (myArray[0][1] == 'X') {
+    bottomLeftNeighbors++;
+  }
+  if (myArray[0][0] == 'X') {
+    bottomLeftNeighbors++;
   }
   if (myArray[rows-2][0] == 'X')
   {
-    bottomLeftNeighbors += 2;
+    bottomLeftNeighbors++;
   }
   if (myArray[rows-2][1] == 'X')
   {
@@ -215,20 +254,32 @@ int Calculator::M_BottomLeft() {
   }
   if (myArray[rows-1][1] == 'X')
   {
-    bottomLeftNeighbors += 2;
+    bottomLeftNeighbors++;
   }
   return bottomLeftNeighbors;
 }
 
-int Calculator::M_BottomRight() {
+int Calculator::D_BottomRight() {
   int bottomRightNeighbors = 0;
 
-  if (myArray[rows-1][columns-1] == 'X') {
-    bottomRightNeighbors += 3;
+  if (myArray[0][0] == 'X') {
+    bottomRightNeighbors++;
+  }
+  if (myArray[0][columns-2] == 'X') {
+    bottomRightNeighbors++;
+  }
+  if (myArray[0][columns-1] == 'X') {
+    bottomRightNeighbors++;
+  }
+  if (myArray[rows-2][0] == 'X') {
+    bottomRightNeighbors++;
+  }
+  if (myArray[rows-1][0] == 'X') {
+    bottomRightNeighbors++;
   }
   if (myArray[rows-1][columns-2] == 'X')
   {
-    bottomRightNeighbors += 2;
+    bottomRightNeighbors++;
   }
   if (myArray[rows-2][columns-2] == 'X')
   {
@@ -236,19 +287,25 @@ int Calculator::M_BottomRight() {
   }
   if (myArray[rows-2][columns-1] == 'X')
   {
-    bottomRightNeighbors += 2;
+    bottomRightNeighbors++;
   }
   return bottomRightNeighbors;
 }
 
-int Calculator::M_TopRow(int j) {
+int Calculator::D_TopRow(int j) {
   int neighborCount = 0;
 
-  if (myArray[0][j] == 'X') {
+  if (myArray[rows-1][j+1] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[rows-1][j-1] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[rows-1][j] == 'X') {
     neighborCount++;
   }
   if (myArray[0][j-1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   if (myArray[1][j-1] == 'X') {
     neighborCount++;
@@ -260,19 +317,25 @@ int Calculator::M_TopRow(int j) {
     neighborCount++;
   }
   if (myArray[0][j+1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   return neighborCount;
 }
 
-int Calculator::M_BottomRow(int j) {
+int Calculator::D_BottomRow(int j) {
   int neighborCount = 0;
 
-  if (myArray[rows-1][j] == 'X') {
+  if (myArray[0][j] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[0][j-1] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[0][j+1] == 'X') {
     neighborCount++;
   }
   if (myArray[rows-1][j-1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   if (myArray[rows-2][j-1] == 'X') {
     neighborCount++;
@@ -284,19 +347,25 @@ int Calculator::M_BottomRow(int j) {
     neighborCount++;
   }
   if (myArray[rows-1][j+1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   return neighborCount;
 }
 
-int Calculator::M_LeftSide(int i) {
+int Calculator::D_LeftSide(int i) {
   int neighborCount = 0;
 
-  if (myArray[i][0] == 'X') {
+  if (myArray[i][columns-1] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[i+1][columns-1] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[i-1][columns-1] == 'X') {
     neighborCount++;
   }
   if (myArray[i-1][0] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   if (myArray[i-1][1] == 'X') {
     neighborCount++;
@@ -308,19 +377,25 @@ int Calculator::M_LeftSide(int i) {
     neighborCount++;
   }
   if (myArray[i+1][0] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   return neighborCount;
 }
 
-int Calculator::M_RightSide(int i) {
+int Calculator::D_RightSide(int i) {
   int neighborCount = 0;
 
-  if (myArray[i][columns-1] == 'X') {
+  if (myArray[i][0] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[i+1][0] == 'X') {
+    neighborCount++;
+  }
+  if (myArray[i-1][0] == 'X') {
     neighborCount++;
   }
   if (myArray[i-1][columns-1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   if (myArray[i-1][columns-2] == 'X') {
     neighborCount++;
@@ -332,7 +407,7 @@ int Calculator::M_RightSide(int i) {
     neighborCount++;
   }
   if (myArray[i+1][columns-1] == 'X') {
-    neighborCount += 2;
+    neighborCount++;
   }
   return neighborCount;
 }

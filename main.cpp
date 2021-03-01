@@ -10,6 +10,6 @@ int main(int argc, char** argv) {
     cin >> columns;
     Calculator *arrayCreator = new Calculator(rows, columns);
     arrayCreator->DetermineStartingLocations();
-    arrayCreator->MirrorModeCalculator();
+    arrayCreator->DoughnutModeCalculator();
     return 0;
 }
