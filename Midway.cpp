@@ -2,7 +2,7 @@
 //#include "Simulation.h"
 
 Calculator::Calculator() {
-  rows = 1;
+  /*rows = 1;
   columns = 1;
 
   myArray = new char*[rows];
@@ -22,7 +22,7 @@ Calculator::Calculator() {
   // assign values to allocated memory
     for (int i = 0; i < rows; i++) {
       for (int j = 0; j < columns; j++) {
-          myArray[i][j] = 'x';
+          myArray[i][j] = 'X';
           SecondGen[i][j] = 0;
           FirstGen[i][j] = 0;
           CurrentGen[i][j] = 0;
@@ -36,7 +36,7 @@ Calculator::Calculator() {
 
 
       std::cout << std::endl;
-  }
+  }*/
 }
 
 Calculator::Calculator(int rows, int columns) {
@@ -72,6 +72,63 @@ Calculator::~Calculator() {
   delete[] FirstGen;
   delete[] SecondGen;
   delete[] CurrentGen;
+}
+
+void Calculator::readFromFile(string fileName) {
+  //Creates an input file stream and opens it to the file
+  ifstream arrayFile;
+  arrayFile.open(fileName);
+
+  //Reads all pertinent values from the text file
+  if (arrayFile.is_open()) {
+    string line;
+    int length;
+    int temp;
+
+    getline(arrayFile, line);
+    length = line.size() - 1;
+    for (int i = 0; i < length; ++i) {
+      temp = line.at(i) - ((int) '0');
+      rows += temp * pow(10, (length - (i + 1)));
+    }
+
+    getline(arrayFile, line);
+    length = line.size() - 1;
+    for (int i = 0; i < length; ++i) {
+      temp = line.at(i) - ((int) '0');
+      columns += temp * pow(10, (length - (i + 1)));
+    }
+
+    myArray = new char*[rows];
+    CurrentGen = new int*[rows];
+    FirstGen = new int*[rows];
+    SecondGen = new int*[rows];
+
+    // dynamically allocate memory of size N for each row
+    for (int i = 0; i < rows; i++) {
+        myArray[i] = new char[columns];
+        SecondGen[i] = new int[columns];
+        FirstGen[i] = new int[columns];
+        CurrentGen[i] = new int[columns];
+
+    }
+
+    getline(arrayFile, line);
+    while (!arrayFile.fail()) {
+      for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < columns; ++j) {
+          myArray[i][j] = line.at(j);
+          CurrentGen[i][j] = 0;
+          FirstGen[i][j] = 0;
+          SecondGen[i][j] = 0;
+        }
+        cout << line << endl;
+        getline(arrayFile, line);
+      }
+    }
+    //Closes the file
+    arrayFile.close();
+  }
 }
 
 void Calculator::DetermineStartingLocations() {
@@ -171,7 +228,7 @@ int Calculator::D_TopLeft() {
   if (myArray[rows-1][0] == 'X') {
     topLeftNeighbors++;
   }
-  if (myArray[rows-1][2] == 'X') {
+  if (myArray[rows-1][1] == 'X') {
     topLeftNeighbors++;
   }
   if (myArray[rows-1][columns-1] == 'X') {

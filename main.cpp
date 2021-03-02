@@ -9,7 +9,8 @@ int main(int argc, char** argv) {
     cin >> rows;
     cin >> columns;
     Calculator *arrayCreator = new Calculator(rows, columns);
-    arrayCreator->DetermineStartingLocations();
+    arrayCreator->readFromFile("test.txt");
+    //arrayCreator->DetermineStartingLocations();
     arrayCreator->DoughnutModeCalculator();
     return 0;
 }

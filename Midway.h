@@ -2,6 +2,9 @@
 #define ARRAY_CREATOR_H
 
 #include <iostream>
+#include <string>
+#include <fstream>
+#include <math.h>
 //#include "Simulation.h"
 
 using namespace std;
@@ -13,6 +16,7 @@ class Calculator {
     ~Calculator();
     void DetermineStartingLocations();
     void DoughnutModeCalculator();
+    void readFromFile(string fileName);
     char** myArray;
     int** CurrentGen;
     int** SecondGen;
